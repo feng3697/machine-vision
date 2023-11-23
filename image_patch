@@ -1,0 +1,37 @@
+import cv2 as cv
+import matplotlib.pyplot as plt
+from skimage.feature import graycomatrix, graycoprops
+
+
+def GET_IMAGE_PATCH(img_path, start_row, start_col, patch_size):
+    img = cv.imread(img_path)
+    gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)  # 转换为灰度图像  
+    height, width = gray.shape
+    end_row = start_row + patch_size
+    end_col = start_col + patch_size
+    end_row = min(end_row, height)
+    end_col = min(end_col, width)
+    if start_row >= end_row or start_col >= end_col:
+        print("采样点不合法")
+        return []
+    window_name = "Image Patches"
+    plt.figure(window_name)  # 使用matplotlib创建窗口  
+    plt.imshow(gray, cmap='gray')  # 在窗口中显示灰度图像  
+    plt.title(window_name)  # 设置窗口标题  
+    plt.show()  # 显示窗口  
+
+    patch_count = 1
+    patches = []
+    for i in range(start_row, end_row, patch_size):
+        for j in range(start_col, end_col, patch_size):
+            patch = gray[i:i + patch_size, j:j + patch_size]
+            patches.append(patch)  # 将图像块添加到列表中  
+            plt.subplot(patch_count, 2, patch_count)  # 在窗口中显示图像块  
+            plt.imshow(patch, cmap='gray')  # 在窗口中显示灰度图像块  
+            plt.title(f"Patch {patch_count}")  # 设置图像块的标题  
+            patch_count += 1  # 增加计数器  
+            plt.show()  # 显示窗口和图像块  
+    return patches  # 返回包含所有图像块的列表  
+
+
+GET_IMAGE_PATCH('D:/test vedio/lingjian.png', 200, 400, 60)
